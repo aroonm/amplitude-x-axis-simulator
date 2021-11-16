@@ -8,33 +8,18 @@ var maxIntercept = 0;
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 document.getElementById('start_date').addEventListener('change', function() {
-  	start_date = new Date(this.value);	
+  	start_date = new Date(this.value.replace(/-/g, '\/').replace(/T.+/, ''));	
 });
 
 document.getElementById('end_date').addEventListener('change', function() {
-  	end_date = new Date(this.value)
+  	end_date = new Date(this.value.replace(/-/g, '\/').replace(/T.+/, ''))
   	myFunction();
 });
 
 function myFunction() {
-	// today = new Date();
-	// tomorrow = new Date();
-	// tomorrow.setDate(today.getDate() + 1);
-
-	// Dates are being parsed and stored in Date() objects
-	// console.log("Start date: " + start_date);
-	// console.log("End date: " + end_date);
-    // console.log("Today: " + today);
-	// console.log("Tomorrow: " + tomorrow);
-
 	// Calculating last 'x' days
 	var diffTime = Math.abs(start_date - end_date);
-	var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));  
-
-	// Calculating '7' days ago
-	// newDate = new Date();
-	// newDate.setDate(today.getDate() - 7);
-	// console.log("7 days ago: " + newDate);
+	var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
 	// Calculate what intercept to use
 	if(diffDays<=14) {
@@ -54,6 +39,7 @@ function myFunction() {
 	}
 
 	console.log(diffDays+ " days, max-intercept: " + maxIntercept);
+	console.log("start date: " + start_date);
 
 	// Looping through date range
 	var now = new Date();
@@ -73,6 +59,27 @@ function myFunction() {
 	}
 
 	console.log(xIntercepts);
+}
+
+function disableFutureDates() {
+	var today = new Date();
+	var tomorrow = new Date();
+	tomorrow.setDate(today.getDate() + 1);
+
+	var dd = tomorrow.getDate();
+	var mm = tomorrow.getMonth() + 1;
+	var yyyy = tomorrow.getFullYear();
+
+	if (dd < 10) {
+	   dd = '0' + dd;
+	}
+	if (mm < 10) {
+	   mm = '0' + mm;
+	} 
+	    
+	tomorrow = yyyy + '-' + mm + '-' + dd;
+	document.getElementById("start_date").setAttribute("max", tomorrow);
+	document.getElementById("end_date").setAttribute("max", tomorrow);
 }
 
 
